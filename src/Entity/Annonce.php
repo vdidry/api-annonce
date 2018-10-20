@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks()
  */
-class Annonce
+class Annonce implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -194,4 +194,18 @@ class Annonce
     {
         $this->setDateCreation(new \DateTime('now'));
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id'            => $this->getId(),
+            'titre'         => $this->getTitre(),
+            'contenu'       => $this->getContenu(),
+            'prix'          => $this->getPrix(),
+            'categorie'     => $this->getCategorie()->getId(),
+            'utilisateur'   => $this->getUtilisateur()->getId(),
+            'date_creation' => $this->getDateCreation(),
+        ];
+    }
+
 }
