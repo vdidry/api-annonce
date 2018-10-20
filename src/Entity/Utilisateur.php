@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("email")
  * @ORM\HasLifecycleCallbacks()
  */
-class Utilisateur
+class Utilisateur implements UserInterface
 {
     /**
      * @ORM\Id
@@ -47,6 +48,11 @@ class Utilisateur
     private $prenom;
 
     /**
+     * @ORM\Column(type="string", unique=true)
+     */
+    private $apiKey;
+
+    /**
      * @ORM\Column(type="datetime", length=255)
      * @Assert\DateTime()
      */
@@ -69,6 +75,24 @@ class Utilisateur
     {
         $this->id = $id;
         return $this;
+    }
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function getSalt()
+    {
+    }
+
+    public function eraseCredentials()
+    {
     }
 
     /**
